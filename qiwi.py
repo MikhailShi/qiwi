@@ -8,14 +8,18 @@
 # Part of this code was sourced from https://t.me/ssleg
 
 import os
+import sys
 import json
 import time
 import uuid
 import hmac
 import hashlib
+import logging
 import requests
 
 from datetime import datetime, timedelta, timezone
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
 class Qiwi:
@@ -97,12 +101,12 @@ def issue_invoice(bill_id, amount, comment=None, email=None, minutes=5):
             return invoice_data["payUrl"]
         else:
             levent = 'qiwi server error (create bill). code - ' + str(cod) + ', response - ' + str(invoice_data)
-            print(levent)
+            logging.warning(levent)
             return 'error'
 
     except Exception as e:
         levent = 'protocol error (create bill): ' + str(e)
-        print(levent)
+        logging.error(levent)
         return 'error'
 
 
@@ -137,12 +141,12 @@ def payment_confirmation(bill_id):
         else:
             levent = ("qiwi server error (bill status). code - " +
                       str(cod) + ", response - " + str(res))
-            print(levent)
+            logging.warning(levent)
             return 'error'
 
     except Exception as e:
         levent = "protocol error (bill status): " + str(e)
-        print(levent)
+        logging.error(levent)
         return "error"
 
 
@@ -177,12 +181,12 @@ def payment_cancellation(bill_id):
         else:
             levent = ("qiwi server error (bill status). code - " +
                       str(cod) + ", response - " + str(res))
-            print(levent)
+            logging.warning(levent)
             return 'error'
 
     except Exception as e:
         levent = "protocol error (bill status): " + str(e)
-        print(levent)
+        logging.error(levent)
         return "error"
 
 
@@ -223,14 +227,14 @@ def check_bill(signature, json_data):
     """
 
     s = json.dumps(json_data)
-    print(f"JSON received {s}")
+    logging.debug(f"JSON received {s}")
 
     bill_id = json_data["bill"].get("billId")
     site_id = json_data["bill"].get("siteId")
     amount_currency = json_data["bill"]["amount"].get("currency")
     amount_value = json_data["bill"]["amount"].get("value")
     status_value = json_data["bill"]["status"].get("value")
-    print(f"Checking hash for {bill_id}")
+    logging.debug(f"Checking hash for {bill_id}")
 
     invoice_parameters_bytes = f"{amount_currency}|{amount_value}|{bill_id}|{site_id}|{status_value}".encode()
 
@@ -244,20 +248,23 @@ def check_bill(signature, json_data):
     ).hexdigest()
     flag = signature == hash_generated
 
-    print(f"hash1: {signature}")
-    print(f"hash2: {hash_generated}")
-    print(f"hashes equal: {flag}")
+    logging.debug(f"hash1: {signature}")
+    logging.debug(f"hash2: {hash_generated}")
+    logging.debug(f"hashes equal: {flag}")
 
     return flag
 
 
 if __name__ == "__main__":
+
+    Qiwi().init_key()
+
     key = str(uuid.uuid4())
 
     # try with 1 rubble bill
     url = issue_invoice(key, amount=1, comment="test")
-    print(url)
+    logging.info(url)
 
     for i in range(10):
-        print(payment_confirmation(key))
+        logging.info(payment_confirmation(key))
         time.sleep(10)
