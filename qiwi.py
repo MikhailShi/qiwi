@@ -164,18 +164,12 @@ def payment_cancellation(bill_id):
     """
 
     try:
-        response = requests.post(
-            Qiwi.BASE_URL + str(bill_id) + "/reject",
-            headers=Qiwi().HEADERS,
-            timeout=15
-        )
-
         response = requests.get(
             Qiwi.BASE_URL + str(bill_id) + "/reject",
             headers=Qiwi().HEADERS,
             timeout=15
         )
-        cod = response.status_code
+        cod = response.status_code  # getting 40X all the time
         res = response.json()
         if cod == 200:
             status = res.get("status")

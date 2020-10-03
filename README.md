@@ -22,7 +22,7 @@ MAC OS, python 3.8.5:
 For this web-app you will need ssl certificates to receive Invoice Payment Notifications (see. [documentation](https://developer.qiwi.com/en/p2p-payments/?php#notification))
 
 You might want to run this repository with [IBM Cloud CF](https://cloud.ibm.com/docs/cloud-foundry?topic=cloud-foundry-getting-started-python) for free.
-Secret Key should be passed through manifest.yml or via CF SSH. Also you need to set application name, which has with the proper route address assigned.
+Secret Key should be passed through manifest.yml or via CF SSH. Also you need to set application name, which should have proper route address assigned.
 
 For trying flask app.py locally (MAC OS, python 3.8.5):
 ```
