@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <section class="content">
+        <header>
+                <h1>New Invoice - QIWI API Example</h1>
+        </header>
+        <form method="post">
+            <label for="account">Customer Account</label>
+            <input name="account" id="account">{{ request.form['account'] }}
+            <label for="phone">Customer Phone</label>
+            <input name="phone" id="phone">{{ request.form['phone'] }}
+            <label for="email">Customer Email</label>
+            <input name="email" id="email">{{ request.form['email'] }}
+            <label for="amount">Amount (xxx.xx)</label>
+            <input name="amount" id="amount" value="{{ request.form['amount'] }}" required>
+            <label for="comment">Comment</label>
+            <textarea name="comment" id="comment" value="{{ request.form['comment'] }}"></textarea>
+            <label for="minutes">Set timer (in minutes)</label>
+            <input name="minutes" id="minutes" value="{{ request.form['minutes'] }}" required>
+            <input type="submit" value="Issue Invoice">
+        </form>
+    </section>
+</body>

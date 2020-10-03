@@ -1,0 +1,8 @@
+---
+applications:
+ - name: insert_your_app_name
+   memory: 128MB
+   disk_quota: 512MB
+   env:
+    SECRET_KEY: insert_your_flask_secret_key
+    QIWI_SECRET_KEY: insert_your_qiwi_secret_key

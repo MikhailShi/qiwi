@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript">
+        let payment_source = new EventSource("{{ url_for('waiting_for_payment', bill_id=bill_id) }}");
+        payment_source.onmessage = function(event) {
+            document.getElementById("qiwiText").innerHTML = "<h4>" + event.data + "</h4>";
+            if (event.data != "Waiting...") {payment_source.close()}
+        };
+    </script>
+</head>
+<body>
+    <section class="content">
+        <header>
+            <h1>Pay Invoice - QIWI API Example</h1>
+            <a class="action" href="{{ payment_url }}" target="_">To pay</a>
+        </header>
+        <div id="qiwiText"></div>
+            <a href="{{ url_for('confirm_payment', bill_id=bill_id) }}" target="_blank">Confirmation</a>
+            <a href="{{ url_for('cancel_payment', bill_id=bill_id) }}" target="_blank">Cancellation</a>
+    </section>
+</body>
